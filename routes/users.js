@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
+var mongoose = require('mongoose');
+var mongoDB = 'mongodb://127.0.0.1:27017/Atendee';
+mongoose.connect(mongoDB);
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const date = new Date();
+const data = date.toDateString();
 
-module.exports = router;
+const schema  = mongoose.Schema({
+  username : String,
+  roll : Number
+})
+
+module.exports = mongoose.model(data,schema);
