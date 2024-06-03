@@ -1,24 +1,28 @@
 var express = require("express");
-const usermodel = require("./users");
 var router = express.Router();
+var mongoose = require('mongoose');
+var mongoDB = 'mongodb://127.0.0.1:27017/Atendee';
+mongoose.connect(mongoDB);
 
-/* GET home page. */
+const schema  = mongoose.Schema({
+  username : String,
+  roll : Number
+})
 
 let usercheck = {};
-const date = new Date();
-const data = date.toDateString();
 
 async function check(req, res, next) {
+  const usermodel = mongoose.model(new Date().toDateString(),schema);
   const name = await usermodel.findOne({ roll: req.body.roll });
   if (name != null) {
     res.redirect("/")
   } else if (req.body.name == "" || req.body.roll == "" || req.body.roll.toString().length<13) {
     res.redirect("/");
   } else {
-    if (usercheck[req.headers.userID] == data) {
+    if (usercheck[req.headers.userID] == new Date().toDateString()) {
       res.redirect("/");
     } else {
-      usercheck[req.headers.userID] = data;
+      usercheck[req.headers.userID] = new Date().toDateString();
       next();
     }
   }
@@ -33,6 +37,7 @@ router.get('/e',(req,res)=>{
 })
 
 router.post("/create", check, async function (req, res, next) {
+  const usermodel = mongoose.model(new Date().toDateString(),schema);
   const user = await usermodel.create({
     username: req.body.name,
     roll: req.body.roll,
