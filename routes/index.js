@@ -21,6 +21,7 @@ async function check(req, res, next) {
   } else {
     if (usercheck[req.headers.userID] == new Date().toDateString()) {
       res.redirect("/");
+      // check
     } else {
       usercheck[req.headers.userID] = new Date().toDateString();
       next();
